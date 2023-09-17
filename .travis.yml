@@ -1,0 +1,23 @@
+language: generic
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t taxd/fullstack-test-app -f ./frontend/Dockerfile.dev ./frontend
+
+script:
+  - docker run -e CI=true taxd/fullstack-test-app npm run test
+
+after_success:
+  - docker build -t taxd/docker-frontend ./frontend
+  - docker build -t taxd/docker-backend ./backend
+  - docker build -t taxd/docker-nginx ./nginx
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  - docker push taxd/docker-frontend
+  - docker push taxd/docker-backend
+  - docker push taxd/docker-nginx
