@@ -1,33 +1,33 @@
-version: '3'
+version: '2.4'
 services:
 
   frontend:
-    build:
-      # dockerfile: Dockerfile.dev
-      context: ./frontend
+    image: taxd/docker-frontend
     volumes:
       - /app/node_modules
       - ./frontend:/app
     stdin_open: true
+    mem_limit: 128m
 
   nginx:
     restart: always
-    build:
-      dockerfile: Dockerfile
-      context: ./nginx
+    image: taxd/docker-nginx
     ports:
-      - '3000:80'
+      - '80:80'
+    mem_limit: 128m
+    links:
+      - frontend
+      - backend
 
   backend:
-    build:
-      # dockerfile: Dockerfile.dev
-      context: ./backend
+    image: taxd/docker-backend
     container_name: app_backend
+    mem_limit: 128m
     volumes:
       - /app/node_modules
       - ./backend:/app
     environment:
-      MYSQL_HOST: mysql
+      MYSQL_HOST: docker-fullstack-mysql.cadsjl2lglqg.ap-northeast-2.rds.amazonaws.com
       MYSQL_USER: root
       MYSQL_ROOT_PASSWORD: 20191201
       MYSQL_DATABASE: taxd
