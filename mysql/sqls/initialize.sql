@@ -1,0 +1,10 @@
+DROP DATABASE IF EXISTS taxd;
+
+CREATE DATABASE taxd;
+USE taxd;
+
+CREATE TABLE lists (
+    id INT NOT NULL AUTO_INCREMENT,
+    value TEXT,
+    PRIMARY KEY (id)
+);
